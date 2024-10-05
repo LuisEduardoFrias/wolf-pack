@@ -1,22 +1,28 @@
 import wolfPackCreate from "./src/wolfpack.js";
-import { alpha } from "./src/models/alpha.js"; -
+import { alpha } from "./src/models/alpha.js";
 
-  class UserModel extends alpha {
-    name: string;
-    lastName: string;
-    email: string;
-    user: string;
-    password: string;
+class UserModel extends alpha {
+  name: string;
+  lastName: string;
+  email: string;
+  user: string;
+  password: string;
 
-    constructor(name: string, lastName: string, email: string, user: string, password: string) {
-      super();
-      this.name = name;
-      this.lastName = lastName;
-      this.email = email;
-      this.user = user;
-      this.password = password;
-    }
+  constructor(
+    name: string,
+    lastName: string,
+    email: string,
+    user: string,
+    password: string) {
+
+    super();
+    this.name = name;
+    this.lastName = lastName;
+    this.email = email;
+    this.user = user;
+    this.password = password;
   }
+};
 
 class CapacityModel extends alpha {
   rom: string;
@@ -24,14 +30,19 @@ class CapacityModel extends alpha {
   processor: string;
   processorSpeed: string;
 
-  constructor(rom: string, ramMemory: string, processor: string, processorSpeed: string) {
+  constructor(
+    rom: string,
+    ramMemory: string,
+    processor: string,
+    processorSpeed: string) {
+
     super();
     this.rom = rom;
     this.ramMemory = ramMemory;
     this.processor = processor;
     this.processorSpeed = processorSpeed;
   }
-}
+};
 
 class PhoneModel extends alpha {
   imei: string;
@@ -43,7 +54,15 @@ class PhoneModel extends alpha {
   releaseDate: string;
   isRemoved: boolean;
 
-  constructor(imei: string, imgUrl: string, brand: string, model: string, color: string, capacity: string, releaseDate: string,) {
+  constructor(
+    imei: string,
+    imgUrl: string,
+    brand: string,
+    model: string,
+    color: string,
+    capacity: string,
+    releaseDate: string) {
+
     super();
     this.imei = imei;
     this.imgUrl = imgUrl;
@@ -54,7 +73,7 @@ class PhoneModel extends alpha {
     this.releaseDate = releaseDate;
     this.isRemoved = false;
   }
-}
+};
 
 const wolfpack = wolfPackCreate([
   UserModel,
@@ -62,6 +81,16 @@ const wolfpack = wolfPackCreate([
   CapacityModel
 ]);
 
-const newts = new UserModel('hola','hola','hola','hola')
+const neww = new UserModel(
+  'hola',
+  'hola',
+  'hola',
+  'hola',
+  'rthyuu'
+)
 
-console.log('UserModel: ', wolfpack.["UserModel"])
+console.log(wolfpack["UserModel"].post(neww))
+
+console.log(
+  'UserModel: ',
+  wolfpack["UserModel"]);

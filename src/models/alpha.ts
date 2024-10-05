@@ -1,4 +1,5 @@
 'use strict'
+
 type uid = `${string}-${string}-${string}-${string}-${string}`;
 type Id = string | number | uid;
 type Relation = {
@@ -10,15 +11,19 @@ type Relation = {
 //add id by configuration
 const addId = true;
 
-class alpha {
+export class alpha {
+  id: Id;
   relation: Relation | null;
 
   constructor(idRelation?: Id | Relation, relation?: Relation) {
-    if (!idRelation) {
+    if (idRelation) {
       if (typeof idRelation === 'object') {
-        this.relation = relation;
+        this.relation = idRelation;
       } else {
         this.id = idRelation;
+
+        if (relation)
+          this.relation = relation;
       }
     }
     else {
@@ -54,4 +59,4 @@ class alpha {
       return new this(...args);
     }
   }
-}
+} 
