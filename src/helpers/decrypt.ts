@@ -1,4 +1,4 @@
 /**/
-export default function Decrypt(text: String): String {
+export default function Decrypt(text: string): string {
   return "";
 }

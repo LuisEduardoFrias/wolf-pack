@@ -1,7 +1,14 @@
 /**/
-import Decrypt from "./decrypt";
+import fs from 'fs/promises';
+import Decrypt from './decrypt';
+import config from './read_config_file.js';
 
-export default function ReadFile(fileName: String): String {
-  console.log(fileName);
-  return Decrypt("");
+export default async function ReadFile(): Promise<object> {
+  try {
+    const data = await fs.readFile(config().DBNAME, { encoding: 'utf8' });
+
+    return JSON.parse(Decrypt(data.toString()));
+  } catch (err: any) {
+    return err;
+  }
 }
