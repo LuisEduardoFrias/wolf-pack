@@ -1,5 +1,7 @@
 //
-import ReadFile from './helpers/read_file';
+import ReadFile from './helpers/read_file.js';
+import { getValueOperator } from './helpers/get_value_operator.js';
+import { getObject, setObject } from './helpers/getset.js';
 
 export default class DbManager<T> {
   fileName: String;
@@ -8,10 +10,15 @@ export default class DbManager<T> {
     this.fileName = fileName;
   }
 
-  public async get(): Promise<T[]> {
-    const arrayT = await ReadFile(this.fileName);
+  public async get(whereOperation: string | object, where: object): Promise<T[]> {
+
+    const dbObject = await ReadFile(this.fileName);
+const value2 = getObject(this.fileName, dbObject);
+
+    const value = getValueOperator([1, 2, 3, 4, 5], '1-2');
+
     console.log('get async', arrayT);
-    return [];
+    return []
   }
   // 
   private async getWhere(where: T): Promise<T[]> {
