@@ -1,0 +1,23 @@
+{
+  "name": "wolf",
+  "version": "1.0.0",
+  "description": "Wolf-pack is a package that makes it easy for you to save data locally in encrypted Json format, it uses the http nomenclature for ease allowing you to store data in relational and non-relational ways.",
+  "main": "./dist/index.js",
+  "type": "module",
+  "scripts": {
+    "dev": "ts-node test.ts"
+  },
+  "keywords": [
+    "db",
+    "json",
+    "local"
+  ],
+  "author": "luis eduardo frias",
+  "dependencies": {
+    "guid-typescript": "^1.0.9"
+  },
+  "devDependencies": {
+    "@types/node": "^20.10.0",
+    "typescript": "^5.2.2"
+  }
+}
