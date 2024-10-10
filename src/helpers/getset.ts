@@ -1,5 +1,7 @@
 /**/
-export function getObject<T>(objectName: string, object: object): Array<T> { return object[objectName] };
+export function getObject<T>(objectName: string, dbObject: object): Array<T> {
+  return dbObject[objectName] as Array<T>;
+};
 
 export function setObject<T>(objectName: string, object: T, dbObject: object): object {
   dbObject[objectName] = object;

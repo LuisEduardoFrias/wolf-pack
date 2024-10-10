@@ -1,43 +1,59 @@
-//
+/**/
+import RewriteFile from './helpers/rewrite_file.js';
 import ReadFile from './helpers/read_file.js';
 import { getValueOperator } from './helpers/get_value_operator.js';
 import { getObject, setObject } from './helpers/getset.js';
+import { Where } from './helpers/where.js';
 
 export default class DbManager<T> {
-  fileName: String;
+  fileName: string;
 
-  constructor(fileName: String) {
+  constructor(fileName: string) {
     this.fileName = fileName;
   }
 
-  public async get(whereOperation: string | object, where: object): Promise<T[]> {
+  public async get(whereOperation?: string | object, where?: object): Promise<T[]> {
 
-    const dbObject = await ReadFile(this.fileName);
-const value2 = getObject(this.fileName, dbObject);
+    const dtObjects: T[] = getObject<T>(this.fileName, await ReadFile());
 
-    const value = getValueOperator([1, 2, 3, 4, 5], '1-2');
+    if (!whereOperation && !where) return dtObjects;
 
-    console.log('get async', arrayT);
-    return []
+    if (typeof whereOperation === "string") {
+
+      let dtFilted: T[] = [];
+
+      if (where) {
+        dtFilted = Where(where, dtObjects);
+      }
+
+      return getValueOperator(dtFilted as T[], whereOperation);
+
+    } else {
+      return Where(whereOperation as object, dtObjects);
+    }
   }
-  // 
-  private async getWhere(where: T): Promise<T[]> {
-    console.log(`get by async ${JSON.stringify(obj)}`);
-    return [];
-  }
-  // 
+  //
   public async post(obj: T): Promise<T> | Promise<null> {
-    console.log(`post async ${JSON.stringify(obj)}`);
-    return obj;
+    const dbObject = await this.get();
+
+    const fullDbObj = setObject<T>(this.fileName, obj, dbObject);
+
+    const isRewrite = RewriteFile(fullDbObj);
+
+    if (!isRewrite)
+      return null;
+
+    return obj as T;
   }
-  // 
+  //
   public async put(obj: T): Promise<T> | Promise<null> {
     console.log(`put async ${JSON.stringify(obj)}`);
     return obj;
   }
-  // 
+  //
   public async delete(where: object): Promise<T> | null {
     console.log(`remove async ${id}`);
     return {};
   }
 }
+

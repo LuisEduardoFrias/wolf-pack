@@ -1,18 +1,17 @@
 /**/
 import { existsSync, readFileSync } from 'fs';
-import { Config } from './models/config.js';
-import { environment } from './models/environment.js';
+import { Config } from '../models/config.js';
+import { environment } from '../models/environment.js';
 //
 
 const filePath = 'wpconfig.json';
 
 const defaultConfig: Config = {
-  ENVIRONMENT = environment.PRODUCTION,
-  DB_NAME = "wpdb",
+  ENVIRONMENT: environment.PRODUCTION,
+  DB_NAME: "wpdb",
 }
 
-
-export default function readConfigFile(): Config | null {
+function readConfigFile(): Config | null {
   try {
 
     if (!existsSync(filePath)) return defaultConfig;
@@ -24,3 +23,4 @@ export default function readConfigFile(): Config | null {
   }
 }
 
+export default readConfigFile();

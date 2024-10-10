@@ -1,14 +1,10 @@
 'use strict'
 
+import { Relation } from "./relation.js";
+
 type uid = `${string}-${string}-${string}-${string}-${string}`;
 type Id = string | number | uid;
-type Relation = {
-  primaryKey: string | undefined;
-  foreignKet: string | undefined;
-  objForeign: string | undefined;
-}
 
-//add id by configuration
 const addId = true;
 
 export class alpha {
