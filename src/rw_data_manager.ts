@@ -46,9 +46,24 @@ export default class DbManager<T> {
     return obj as T;
   }
   //
-  public async put(obj: T): Promise<T> | Promise<null> {
-    console.log(`put async ${JSON.stringify(obj)}`);
-    return obj;
+  public async put(obj: T, where: object): Promise<T> | Promise<null> {
+    const dbObject = await this.get();
+
+    const props = Reflect.ownKeys(where as object);
+    const index = dbObject.findIndex((dto: T) => {
+      return props.every((prop: string) => { return dto[prop] === where[prop]; })
+    }) as T[];
+
+    if (index === -1) return null;
+
+    dbObject[index] = obj;
+
+    const isRewrite = RewriteFile(dbObject);
+
+    if (!isRewrite)
+      return null;
+
+    return obj as T;
   }
   //
   public async delete(where: object): Promise<T> | null {
