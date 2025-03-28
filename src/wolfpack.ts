@@ -1,65 +1,60 @@
-// 
-'use strict';
-import crypto from 'crypto';
+'use strict'
+import CreateFile from './helpers/create_file.ts'
+import { TypeFileStructure } from './models/type_file_structure.ts'
+import SubwriteFile from './helpers/rewrite_file.ts'
+import DbManager from './rw_data_manager.ts'
 //
-import CreateFile from './create_file.js';
-import SubwriteFile from './subwrite_file.js';
-import Environment from './models/environment.js';
-import ReadConfigFile from './readConfigFile.js';
-import DbManager from './db_manager.js';
-//
-const { ENVIRONMENT, DB_NAME } = ReadConfigFile();
-
-const isDebelopment: boolean = (ENVIRONMENT === Environment.production);
-const fullDataConfiFile = `./ ${DB_NAME}.${isDebelopment ? 'db' : 'json'}`;
-
-function wolfPackCreate(pack: any[], update: boolean = false) {
-  return WolfPack.getInstance(pack, update);
+export type TypeWolfpack = {
+	member: any[],
+	wolfpack: string
 }
 
-class WolfPack {
-  private static instance: WolfPack;
-  private constructor() { }
 
-  public static getInstance(wolves: any[], update: boolean): WolfPack {
+const structureDataFiles: TypeFileStructure = {
+	__data__: {},
+	props: {}
+}
+
+export default class WolfPack {
+	private static instance: WolfPack;
+	private constructor() { }
+
+	public static getInstance(wolfpacks: TypeWolfpack[], update: boolean): WolfPack {
+
+		if (!WolfPack.instance) {
+			this.initialice(wolfpacks);
+		}
+
+		if (update) {
+			this.initialice(wolfpacks, update);
+		}
+
+		return WolfPack.instance;
+	}
+
+	private static initialice(wolfpacks: TypeWolfpack[], update: boolean) {
+		WolfPack.instance = new WolfPack();
 
 
-    function initialice() {
-      WolfPack.instance = new WolfPack();
-      createFile(fullDataConfiFile);
+		wolfpacks.forEach((wolfpack_: TypeWolfpack) => {
 
-      const files: object[] = [];
+			let newWolfpack = {};
 
-      wolves.forEach((classType: any) => {
-        const instance = new classType(...[]);
+			wolfpack_.member.forEach((classType: any) => {
+				const instance = new classType(...[]);
 
-        const uid = (crypto.randomUUID()).replace(/-/g, '');
+				Reflect.set(
+					newWolfpack,
+					classType.name,
+					new DbManager<typeof instance>(wolfpack_.wolfpack, classType.name)
+				);
 
-        Reflect.set(
-          WolfPack.instance,
-          classType.name,
-          new DbManager<typeof instance>()
-        );
+				Reflect.set(structureDataFiles.props, classType.name, []);
+			})
 
-        createFile(uid);
+			Reflect.set(WolfPack.instance, wolfpack_.wolfpack, newWolfpack);
 
-        files.push({ key: uid, value: `${classType.name}` })
-      })
-      subwriteFile(fullDataConfiFile, files);
-    }
-
-    if (!WolfPack.instance) {
-      initialice();
-    }
-
-    if (update) {
-      initialice();
-    }
-
-    console.log(`Db created.`);
-    return WolfPack.instance;
-
-  }
+			CreateFile(wolfpack_.wolfpack, structureDataFiles, update);
+		})
+	}
 };
-
-export default wolfPackCreate;

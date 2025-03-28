@@ -1,9 +1,14 @@
-/**/
-export function getObject<T>(objectName: string, dbObject: object): Array<T> {
-  return dbObject[objectName] as Array<T>;
+import { TypeFileStructure } from '../models/type_file_structure.ts'
+
+export function getProp<T>(propName: string, fileObject: TypeFileStructure): Array<T> {
+
+	console.log("neww: ", fileObject)
+
+	if (!fileObject) return null;
+	return fileObject.props[propName] as T[];
 };
 
-export function setObject<T>(objectName: string, object: T, dbObject: object): object {
-  dbObject[objectName] = object;
-  return dbObject;
+export function setProp<T>(propName: string, prop: T, fileObject: TypeFileStructure): object {
+	fileObject.props[propName] = prop;
+	return fileObject;
 };

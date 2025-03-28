@@ -1,74 +1,96 @@
-/**/
-import RewriteFile from './helpers/rewrite_file.js';
-import ReadFile from './helpers/read_file.js';
-import { getValueOperator } from './helpers/get_value_operator.js';
-import { getObject, setObject } from './helpers/getset.js';
-import { Where } from './helpers/where.js';
+import RewriteFile from './helpers/rewrite_file.ts';
+import ReadFile from './helpers/read_file.ts';
+import { getValueOperator } from './helpers/get_value_operator.ts';
+import { getProp, setProp } from './helpers/getset.ts';
+import { Where } from './helpers/where.ts';
+import { TypeFileStructure } from './models/type_file_structure.ts'
 
 export default class DbManager<T> {
-  fileName: string;
+	fileName: string;
+	prop: string;
 
-  constructor(fileName: string) {
-    this.fileName = fileName;
-  }
+	constructor(fileName: string, prop: string) {
+		this.fileName = fileName;
+		this.prop = prop;
+	}
 
-  public async get(whereOperation?: string | object, where?: object): Promise<T[]> {
+	public async get(whereOperation?: string | object, where?: object): Promise<T[]> {
 
-    const dtObjects: T[] = getObject<T>(this.fileName, await ReadFile());
+		const propObjects: T[] = getProp<T>(this.prop, await ReadFile(this.fileName));
 
-    if (!whereOperation && !where) return dtObjects;
+		if (!propObjects) return null;
 
-    if (typeof whereOperation === "string") {
+		if (!whereOperation && !where) return propObjects;
 
-      let dtFilted: T[] = [];
+		if (typeof whereOperation === "string") {
 
-      if (where) {
-        dtFilted = Where(where, dtObjects);
-      }
+			let dtFilted: T[] = [];
 
-      return getValueOperator(dtFilted as T[], whereOperation);
+			if (where) {
+				dtFilted = Where(where, propObjects);
+			}
 
-    } else {
-      return Where(whereOperation as object, dtObjects);
-    }
-  }
-  //
-  public async post(obj: T): Promise<T> | Promise<null> {
-    const dbObject = await this.get();
+			return getValueOperator(dtFilted as T[], whereOperation);
 
-    const fullDbObj = setObject<T>(this.fileName, obj, dbObject);
+		} else {
+			return Where(whereOperation as object, propObjects);
+		}
+	}
+	//
+	public async post(obj: T): Promise<T> {
+		const propObject = await this.get();
 
-    const isRewrite = RewriteFile(fullDbObj);
+		if (!propObject) return null;
 
-    if (!isRewrite)
-      return null;
+		propObject.push(obj);
 
-    return obj as T;
-  }
-  //
-  public async put(obj: T, where: object): Promise<T> | Promise<null> {
-    const dbObject = await this.get();
+		const fileObject = setProp<T>(this.prop, propObject, await ReadFile(this.fileName));
 
-    const props = Reflect.ownKeys(where as object);
-    const index = dbObject.findIndex((dto: T) => {
-      return props.every((prop: string) => { return dto[prop] === where[prop]; })
-    }) as T[];
+		RewriteFile(this.fileName, fileObject);
 
-    if (index === -1) return null;
+		return obj;
+	}
+	//
+	public async put(obj: T, where: object): Promise<T> {
+		const propObject: T[] = await this.get();
 
-    dbObject[index] = obj;
+		if (!propObject) return null;
 
-    const isRewrite = RewriteFile(dbObject);
+		const props = Reflect.ownKeys(where as object);
 
-    if (!isRewrite)
-      return null;
+		const index: number = propObject.findIndex((dto: T) => {
+			return props.every((prop: string) => { return dto[prop as keyof T] === where[prop]; })
+		});
 
-    return obj as T;
-  }
-  //
-  public async delete(where: object): Promise<T> | null {
-    console.log(`remove async ${id}`);
-    return {};
-  }
+		if (index === -1) return null;
+
+		propObject[index] = obj;
+
+		const fileObject = setProp<T>(this.prop, propObject, await ReadFile(this.fileName));
+
+		RewriteFile(this.fileName, fileObject);
+
+		return obj as T;
+	}
+	//
+	public async delete(where: object): Promise<T> {
+		const propObject: T[] = await this.get();
+
+		if (!propObject) return null;
+
+		const props = Reflect.ownKeys(where as object);
+
+		const index: number = propObject.findIndex((dto: T) => {
+			return props.every((prop: string) => { return dto[prop as keyof T] === where[prop]; })
+		});
+
+		if (index === -1) return null;
+
+		propObject.splice(index, 1);
+
+		const fileObject = setProp<T>(this.prop, propObject, await ReadFile(this.fileName));
+
+		RewriteFile(this.fileName, fileObject);
+	}
 }
 

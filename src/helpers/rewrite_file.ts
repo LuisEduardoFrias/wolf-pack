@@ -1,20 +1,17 @@
-/**/
 import fs from 'fs/promises';
-import Encript from './encrypt.js';
-import Decrypt from './decrypt.js';
-import config from './read_config_file.js';
-//
-export default async function RewriteFile(fileName: string, obj: object): Promise<object> | Promise<null> {
-  try {
-    const data = await fs.readFile(config?.DB_NAME as string, { encoding: 'utf8' });
+import {encript} from './crypto.ts';
+import { Config } from '../models/config.ts'
+import { TypeFileStructure } from '../models/type_file_structure.ts'
 
-    const dbObject = JSON.parse(Decrypt(data.toString()));
+export default async function RewriteFile(fileName: string, fileObject: TypeFileStructure) {
+	try {
+		const filePath = join(Config.DATA_PATH, `${fileName}${Config.FILE_EXTENSION}`);
 
-    dbObject[fileName] = obj;
+		const data = Config.ENCRYPT ? encript(JSON.stringify(fileObject)) : JSON.stringify(fileObject);
 
-    await fs.writeFile(config?.DB_NAME as string, Encript(JSON.stringify(dbObject)));
-    return obj;
-  } catch (err: any) {
-    return null;
-  }
+		await fs.writeFile(filePath, data);
+	} catch (err: any) {
+		const error = new Error(err);
+		throw error;
+	}
 }
