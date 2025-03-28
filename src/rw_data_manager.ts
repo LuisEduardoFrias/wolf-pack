@@ -100,19 +100,19 @@ export default class DbManager<T> {
 
 		if (!whereOperation && !where) return propObjects;
 
-		if (typeof whereOperation === "string") {
-
-			let dtFilted: T[] = [];
-
-			if (where) {
-				dtFilted = Where(where, propObjects);
-			}
-
-			return getValueOperator(dtFilted as T[], whereOperation);
-
-		} else {
+		if (typeof whereOperation !== "string") {
 			return Where(whereOperation as object, propObjects);
 		}
+
+		let dtFilted: T[] = [];
+
+		if (where) {
+			dtFilted = Where(where, propObjects);
+		}
+		
+		return getValueOperator(dtFilted as T[], whereOperation);
+
+
 	}
 	//
 	public async post(obj: T): Promise<T> {

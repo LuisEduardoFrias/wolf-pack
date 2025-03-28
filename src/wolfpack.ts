@@ -38,6 +38,7 @@ export default class WolfPack {
 		wolfpacks.forEach((wolfpack_: TypeWolfpack) => {
 
 			let newWolfpack = {};
+			let relationBetween = [];
 
 			wolfpack_.member.forEach((classType: any) => {
 				const instance = new classType(...[]);
@@ -48,9 +49,23 @@ export default class WolfPack {
 					new DbManager<typeof instance>(wolfpack_.wolfpack, classType.name)
 				);
 
+				if (instance?.entity_config?.entity_ref) {
+					const refs = [];
+					instance?.entity_config
+						?.entity_ref?.forEach((ref) => {
+							refs.push(ref.entity)
+						})
+
+					relationBetween.push({
+						prop: classType.name,
+						refsProp: refs
+					})
+				}
+
 				Reflect.set(structureDataFiles.__data_config__, classType.name, instance.entity_config ?? {
 					primaryKey: 'id',
 					entity_ref: [],
+					relationship: [],
 					unique: null,
 				});
 
@@ -58,6 +73,18 @@ export default class WolfPack {
 			})
 
 			Reflect.set(WolfPack.instance, wolfpack_.wolfpack, newWolfpack);
+
+			relationBetween.forEach((rb) => {
+				rb.refsProp.forEach((rp) => {
+
+					const data = structureDataFiles.__data_config__[rp];
+
+					Reflect.set(structureDataFiles.__data_config__, rp, {
+						...data,
+						relationship: [...(data?.relationship ?? []), rb.prop],
+					});
+				})
+			})
 
 			CreateFile(wolfpack_.wolfpack, structureDataFiles, update);
 		})

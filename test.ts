@@ -11,13 +11,24 @@ class CapacityModel extends alpha {
 		rom: string,
 		ramMemory: string,
 		processor: string,
-		processorSpeed: string) {
+		processorSpeed: string,
+		phone: Id) {
 
-		super();
+		super();		
+		this.entity_config = {
+			entity_ref: [
+				{
+					primaryKey: 'imei',
+					foreignKey: 'phone',
+					entity: 'PhoneModel'
+				}
+			],
+		}
 		this.rom = rom;
 		this.ramMemory = ramMemory;
 		this.processor = processor;
 		this.processorSpeed = processorSpeed;
+		this.phone = phone;
 	}
 };
 class PhoneModel extends alpha {
@@ -91,9 +102,9 @@ class UserModel extends alpha {
 
 const wolfpack = wolfPackCreate(
 	{
-		member: [UserModel, PhoneModel, CapacityModel],
+		member: [UserModel, CapacityModel, PhoneModel],
 		wolfpack: "phones"
-	});
+	},true);
 
 const newPhone = new PhoneModel(
 	'hs6jwjwi8skskls9kw',
@@ -104,7 +115,6 @@ const newPhone = new PhoneModel(
 	'256gb',
 	'11/27/2027'
 )
-
 const newUser = new UserModel(
 	'carlos',
 	'morales',
@@ -114,8 +124,9 @@ const newUser = new UserModel(
 	'hs6jwjwi8skskls9kw',
 )
 
-//console.log("post1 phone: ", await wolfpack.phones.PhoneModel.post(newPhone))
-//console.log("post2 user: ", await wolfpack.phones.UserModel.post(newUser))
 
-console.log('get: ', await wolfpack.phones.UserModel.get());
-console.log('get: ', await wolfpack.phones.PhoneModel.get());
+console.log("post phone: ", await wolfpack.phones.PhoneModel.post(newPhone))
+console.log("post user: ", await wolfpack.phones.UserModel.post(newUser))
+
+console.log('get phone: ', await wolfpack.phones.UserModel.get());
+console.log('get user: ', await wolfpack.phones.PhoneModel.get());
