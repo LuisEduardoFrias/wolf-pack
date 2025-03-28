@@ -5,6 +5,57 @@ import { getProp, setProp } from './helpers/getset.ts';
 import { Where } from './helpers/where.ts';
 import { TypeFileStructure } from './models/type_file_structure.ts'
 
+class Validate<T>{
+	dataFile: TypeFileStructure;
+	newPropObject: T;
+	prop: string;
+
+	constructor(dataFile: TypeFileStructure, newPropObject: T, prop: string) {
+		this.dataFile = dataFile;
+		this.newPropObject = newPropObject;
+		this.prop = prop;
+	}
+	//
+	public validatePrimaryKey(): Validate<J> {
+		const primaryKey = (this.dataFile.__data_config__[this.prop])?.primaryKey;
+		const props = this.dataFile.props[this.prop];
+
+		if (props && primaryKey) {
+			props.forEach((prop) => {
+				if (prop[primaryKey] === this.newPropObject[primaryKey]) {
+					const error = new Error(`La propiedad '${primaryKey}' con el valor '${prop[primaryKey]}', esta configurada como 'primaryKey' no pueden existir dublicados.`)
+					throw error;
+				}
+			})
+		}
+
+		return this;
+	}
+	//
+	public validateUnique(): Validate<J> {
+		const uniques = (this.dataFile.__data_config__[this.prop])?.unique;
+		const props = this.dataFile.props[this.prop];
+
+		if (props && uniques) {
+			uniques.forEach((unique) => {
+				props.forEach((prop) => {
+					if (prop[unique] === this.newPropObject[unique]) {
+						const error = new Error(`La propiedad '${unique}' con el valor '${prop[unique]}', esta configurada como 'unique' no pueden existir dublicados.`)
+						throw error;
+					}
+				})
+			})
+		}
+
+		return this;
+	}
+	//
+	public removeEntityConfig(): Validate<j> {
+		delete this.newPropObject.entity_config;
+		return this;
+	}
+}
+
 export default class DbManager<T> {
 	fileName: string;
 	prop: string;
@@ -38,39 +89,43 @@ export default class DbManager<T> {
 	}
 	//
 	public async post(obj: T): Promise<T> {
-		const propObject = await this.get();
 
-		if (!propObject) return null;
+		const { fileObject, newObject } = await this.validated(obj);
+		const propObjects: T[] = getProp<T>(this.prop, fileObject);
 
-		propObject.push(obj);
+		if (!propObjects) return null;
 
-		const fileObject = setProp<T>(this.prop, propObject, await ReadFile(this.fileName));
+		propObjects.push(newObject);
 
-		RewriteFile(this.fileName, fileObject);
+		const _fileObject = setProp<T>(this.prop, propObjects, fileObject);
 
-		return obj;
+		RewriteFile(this.fileName, _fileObject);
+
+		return newObject;
 	}
 	//
 	public async put(obj: T, where: object): Promise<T> {
-		const propObject: T[] = await this.get();
 
-		if (!propObject) return null;
+		const { fileObject, newObject } = await this.validated(obj);
+		const propObjects: T[] = getProp<T>(this.prop, fileObject);
+
+		if (!propObjects) return null;
 
 		const props = Reflect.ownKeys(where as object);
 
-		const index: number = propObject.findIndex((dto: T) => {
+		const index: number = propObjects.findIndex((dto: T) => {
 			return props.every((prop: string) => { return dto[prop as keyof T] === where[prop]; })
 		});
 
 		if (index === -1) return null;
 
-		propObject[index] = obj;
+		propObjects[index] = newObject;
 
-		const fileObject = setProp<T>(this.prop, propObject, await ReadFile(this.fileName));
+		const _fileObject = setProp<T>(this.prop, propObjects, fileObject);
 
-		RewriteFile(this.fileName, fileObject);
+		RewriteFile(this.fileName, _fileObject);
 
-		return obj as T;
+		return newObject;
 	}
 	//
 	public async delete(where: object): Promise<T> {
@@ -92,5 +147,18 @@ export default class DbManager<T> {
 
 		RewriteFile(this.fileName, fileObject);
 	}
-}
+	//
+	private async validated(obj: T) {
+		const Validate_ = new Validate(await ReadFile(this.fileName), obj, this.prop);
 
+		Validate_
+			.validatePrimaryKey()
+			.validateUnique()
+			.removeEntityConfig();
+
+		return {
+			fileObject: Validate_.dataFile,
+			newObject: Validate_.newPropObject
+		};
+	}
+}

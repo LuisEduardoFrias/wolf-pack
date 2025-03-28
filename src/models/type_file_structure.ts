@@ -1,5 +1,9 @@
+import { entity_config } from './entity_config.ts'
+
 export type TypeFileStructure = {
-	__data__: object,
+	__data_config__: {
+		[key: string | number | symbol]: EntityConf
+	}[],
 	props: {
 		[key: string | number | symbol]: {
 			[key: string | number | symbol]: any
@@ -8,11 +12,20 @@ export type TypeFileStructure = {
 }
 /*
 {
-	"__data__": { },
-	"props": {
-		"UserModel": [],
+	"__data_config__": [
+		"UserModel": {
+			"primaryKey"?: string;
+			"foreignKey"?: string;
+			"unique"?: string[];
+			"entity_ref"?: string;
+		}
+	]
+	"props": [
+		{
+			"UserModel": [],
 			"PhoneModel": [],
-				"CapacityModel": []
-	}
+			"CapacityModel": []
+		}
+	]
 }
 */

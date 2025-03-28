@@ -11,7 +11,7 @@ export type TypeWolfpack = {
 
 
 const structureDataFiles: TypeFileStructure = {
-	__data__: {},
+	__data_config__: {},
 	props: {}
 }
 
@@ -35,7 +35,6 @@ export default class WolfPack {
 	private static initialice(wolfpacks: TypeWolfpack[], update: boolean) {
 		WolfPack.instance = new WolfPack();
 
-
 		wolfpacks.forEach((wolfpack_: TypeWolfpack) => {
 
 			let newWolfpack = {};
@@ -48,6 +47,13 @@ export default class WolfPack {
 					classType.name,
 					new DbManager<typeof instance>(wolfpack_.wolfpack, classType.name)
 				);
+
+				Reflect.set(structureDataFiles.__data_config__, classType.name, instance.entity_config ?? {
+					primaryKey: 'id',
+					foreignKey: null,
+					unique: null,
+					entity_ref: null
+				});
 
 				Reflect.set(structureDataFiles.props, classType.name, []);
 			})

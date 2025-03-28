@@ -1,29 +1,27 @@
 'use strict'
-import { Relation } from "./relation.ts";
+import { EntityConfig } from "./entity_config.ts";
 
 type uid = `${string}-${string}-${string}-${string}-${string}`;
 type Id = string | number | uid;
 
-const addId = true;
-
 export class alpha {
 	id: Id;
-	relation: Relation | null;
+	entity_config: EntityConfig | null;
 
-	constructor(idRelation?: Id | Relation, relation?: Relation) {
-		if (idRelation) {
-			if (typeof idRelation === 'object') {
-				this.relation = idRelation;
+	constructor(id_entity_config?: Id | EntityConfig, entity_config?: EntityConfig) {
+		if (id_entity_config) {
+
+			if (typeof id_entity_config === 'object') {
+				this.entity_config = id_entity_config;
 			} else {
-				this.id = idRelation;
+				this.id = id_entity_config;
 
-				if (relation)
-					this.relation = relation;
+				if (entity_config)
+					this.entity_config = entity_config;
 			}
 		}
 		else {
-			if (addId)
-				this.id = crypto.randomUUID();
+			this.id = crypto.randomUUID();
 		}
 	}
 

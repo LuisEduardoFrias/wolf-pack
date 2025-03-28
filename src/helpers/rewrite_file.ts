@@ -1,5 +1,6 @@
 import fs from 'fs/promises';
 import {encript} from './crypto.ts';
+import { join } from 'path';
 import { Config } from '../models/config.ts'
 import { TypeFileStructure } from '../models/type_file_structure.ts'
 

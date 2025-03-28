@@ -1,28 +1,6 @@
 import { wolfPackCreate } from "./index.ts";
 import { alpha } from "./src/models/alpha.ts";
 
-class UserModel extends alpha {
-	name: string;
-	lastName: string;
-	email: string;
-	user: string;
-	password: string;
-
-	constructor(
-		name: string,
-		lastName: string,
-		email: string,
-		user: string,
-		password: string) {
-
-		super();
-		this.name = name;
-		this.lastName = lastName;
-		this.email = email;
-		this.user = user;
-		this.password = password;
-	}
-};
 class CapacityModel extends alpha {
 	rom: string;
 	ramMemory: string;
@@ -72,26 +50,48 @@ class PhoneModel extends alpha {
 		this.isRemoved = false;
 	}
 };
+class UserModel extends alpha {
+	name: string;
+	lastName: string;
+	email: string;
+	user: string;
+	password: string;
+
+	constructor(
+		name: string,
+		lastName: string,
+		email: string,
+		user: string,
+		password: string) {
+		super();
+		this.entity_config = {
+					primaryKey: "user",
+					unique: ["email", "password"],
+					foreignKey: 'id',
+					entity_ref: 'PhoneModel'
+				}
+		this.name = name;
+		this.lastName = lastName;
+		this.email = email;
+		this.user = user;
+		this.password = password;
+	}
+};
 
 const wolfpack = wolfPackCreate(
-	[{
-		member: [UserModel, PhoneModel, CapacityModel],
-		wolfpack: "phones"
-	},
 	{
 		member: [UserModel, PhoneModel, CapacityModel],
-		wolfpack: "users"
-	}]
-	, true);
+		wolfpack: "phones"
+	}, true);
 
-const neww = new UserModel(
-	'luis eduardo',
+const newUser = new UserModel(
+	'luis joso',
 	'frias',
-	'luiseduardofrias@gmail.com',
-	'luisEf',
-	'el190114'
+	'luisJodofrias@gmail.com',
+	'luisEJ',
+	'el19014'
 )
 
-console.log(await wolfpack.phones.UserModel.post(neww))
+console.log("post: ", await wolfpack.phones.UserModel.post(newUser))
 
-console.log('UserModel: ', await wolfpack.phones.UserModel.get());
+console.log('get: ', await wolfpack.phones.UserModel.get());
