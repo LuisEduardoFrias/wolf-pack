@@ -1,1 +1,61 @@
-{"__data_config__":{"UserModel":{"primaryKey":"user","unique":["email","password"],"entity_ref":[{"primaryKey":"imei","foreignKey":"phone","entity":"PhoneModel"}]},"CapacityModel":{"entity_ref":[{"primaryKey":"imei","foreignKey":"phone","entity":"PhoneModel"}]},"PhoneModel":{"primaryKey":"imei","relationship":["UserModel","CapacityModel"]}},"props":{"UserModel":[{"id":"b68cb364-1e79-46bf-b71a-86aa37773e4d","name":"carlos","lastName":"morales","email":"carlos@gmail.com","user":"moralesC","password":"mc17892k","phone":"hs6jwjwi8skskls9kw"}],"CapacityModel":[],"PhoneModel":[{"id":"5fcaec13-1e83-4c75-a6da-2498b1907f9e","imei":"hs6jwjwi8skskls9kw","imgUrl":"http://www.eje.com","brand":"samsung","model":"galaxy","color":"azul","capacity":"256gb","releaseDate":"11/27/2027","isRemoved":false}]}}
+{
+	"__data_config__": {
+		"UserModel": {
+			"primaryKey": "user",
+			"unique": [
+				"email",
+				"password"
+			],
+			"entity_ref": [
+				{
+					"primaryKey": "imei",
+					"foreignKey": "phone",
+					"entity": "PhoneModel"
+				}
+			]
+		},
+		"CapacityModel": {
+			"entity_ref": [
+				{
+					"primaryKey": "imei",
+					"foreignKey": "phone",
+					"entity": "PhoneModel"
+				}
+			]
+		},
+		"PhoneModel": {
+			"primaryKey": "imei",
+			"relationship": [
+				"UserModel",
+				"CapacityModel"
+			]
+		}
+	},
+	"props": {
+		"UserModel": [
+			{
+				"id": "b68cb364-1e79-46bf-b71a-86aa37773e4d",
+				"name": "carlos",
+				"lastName": "morales",
+				"email": "carlos@gmail.com",
+				"user": "moralesC",
+				"password": "mc17892k",
+				"phone": "hs6jwjwi8skskls9kwt"
+			}
+		],
+		"CapacityModel": [],
+		"PhoneModel": [
+			{
+				"id": "5fcaec13-1e83-4c75-a6da-2498b1907f9e",
+				"imei": "hs6jwjwi8skskls9kw",
+				"imgUrl": "http://www.eje.com",
+				"brand": "samsung",
+				"model": "galaxy",
+				"color": "azul",
+				"capacity": "256gb",
+				"releaseDate": "11/27/2027",
+				"isRemoved": false
+			}
+		]
+	}
+}

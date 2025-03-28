@@ -109,7 +109,7 @@ export default class DbManager<T> {
 		if (where) {
 			dtFilted = Where(where, propObjects);
 		}
-		
+
 		return getValueOperator(dtFilted as T[], whereOperation);
 
 
@@ -156,21 +156,39 @@ export default class DbManager<T> {
 	}
 	//
 	public async delete(where: object): Promise<T> {
-		const propObject: T[] = await this.get();
+		const dataFile = await ReadFile(this.fileName);
 
-		if (!propObject) return null;
+		if (!dataFile) return null;
 
-		const props = Reflect.ownKeys(where as object);
+		const propObject = (dataFile.__data_config__[this.prop]);
+		const relationship = propObject?.relationship;
+		const primaryKey = propObject?.primaryKey;
+		const props = dataFile.props[this.prop];
 
-		const index: number = propObject.findIndex((dto: T) => {
-			return props.every((prop: string) => { return dto[prop as keyof T] === where[prop]; })
+		const values = Reflect.ownKeys(where as object);
+
+		const index: number = props.findIndex((dto: T) => {
+			return values.every((value: string) => { return dto[value as keyof T] === where[value]; })
 		});
 
 		if (index === -1) return null;
 
-		propObject.splice(index, 1);
+		if (relationship) {
+			const valuePrimaryKey = props[index][primaryKey];
 
-		const fileObject = setProp<T>(this.prop, propObject, await ReadFile(this.fileName));
+			relationship.forEach((rs) => {
+				const foreignKey = (dataFile.__data_config__[rs])?.entity_ref?.foreignKey;
+				const _props = dataFile.props[rs];
+
+				if (_props.some((so) => so[foreignKey] === valuePrimaryKey)) {
+					return null;
+				}
+			})
+		}
+
+		props.splice(index, 1);
+
+		const fileObject = setProp<T>(this.prop, props, dataFile);
 
 		RewriteFile(this.fileName, fileObject);
 	}
