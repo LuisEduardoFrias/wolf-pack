@@ -1,5 +1,5 @@
 import { wolfPackCreate } from "./index.ts";
-import { alpha } from "./src/models/alpha.ts";
+import { alpha, Id } from "./src/models/alpha.ts";
 
 class CapacityModel extends alpha {
 	rom: string;
@@ -40,6 +40,9 @@ class PhoneModel extends alpha {
 		releaseDate: string) {
 
 		super();
+		this.entity_config = {
+			primaryKey: "imei",
+		}
 		this.imei = imei;
 		this.imgUrl = imgUrl;
 		this.brand = brand;
@@ -62,19 +65,27 @@ class UserModel extends alpha {
 		lastName: string,
 		email: string,
 		user: string,
-		password: string) {
+		password: string,
+		phone: Id
+	) {
 		super();
 		this.entity_config = {
-					primaryKey: "user",
-					unique: ["email", "password"],
-					foreignKey: 'id',
-					entity_ref: 'PhoneModel'
+			primaryKey: "user",
+			unique: ["email", "password"],
+			entity_ref: [
+				{
+					primaryKey: 'imei',
+					foreignKey: 'phone',
+					entity: 'PhoneModel'
 				}
+			],
+		}
 		this.name = name;
 		this.lastName = lastName;
 		this.email = email;
 		this.user = user;
 		this.password = password;
+		this.phone = phone;
 	}
 };
 
@@ -82,16 +93,29 @@ const wolfpack = wolfPackCreate(
 	{
 		member: [UserModel, PhoneModel, CapacityModel],
 		wolfpack: "phones"
-	}, true);
+	});
 
-const newUser = new UserModel(
-	'luis joso',
-	'frias',
-	'luisJodofrias@gmail.com',
-	'luisEJ',
-	'el19014'
+const newPhone = new PhoneModel(
+	'hs6jwjwi8skskls9kw',
+	'http://www.eje.com',
+	'samsung',
+	'galaxy',
+	'azul',
+	'256gb',
+	'11/27/2027'
 )
 
-console.log("post: ", await wolfpack.phones.UserModel.post(newUser))
+const newUser = new UserModel(
+	'carlos',
+	'morales',
+	'carlos@gmail.com',
+	'moralesC',
+	'mc17892k',
+	'hs6jwjwi8skskls9kw',
+)
+
+//console.log("post1 phone: ", await wolfpack.phones.PhoneModel.post(newPhone))
+//console.log("post2 user: ", await wolfpack.phones.UserModel.post(newUser))
 
 console.log('get: ', await wolfpack.phones.UserModel.get());
+console.log('get: ', await wolfpack.phones.PhoneModel.get());

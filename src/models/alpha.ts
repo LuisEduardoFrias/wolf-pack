@@ -2,11 +2,11 @@
 import { EntityConfig } from "./entity_config.ts";
 
 type uid = `${string}-${string}-${string}-${string}-${string}`;
-type Id = string | number | uid;
+export type Id = string | number | symbol | uid;
 
 export class alpha {
 	id: Id;
-	entity_config: EntityConfig | null;
+	entity_config?: EntityConfig | null;
 
 	constructor(id_entity_config?: Id | EntityConfig, entity_config?: EntityConfig) {
 		if (id_entity_config) {

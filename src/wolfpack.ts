@@ -50,9 +50,8 @@ export default class WolfPack {
 
 				Reflect.set(structureDataFiles.__data_config__, classType.name, instance.entity_config ?? {
 					primaryKey: 'id',
-					foreignKey: null,
+					entity_ref: [],
 					unique: null,
-					entity_ref: null
 				});
 
 				Reflect.set(structureDataFiles.props, classType.name, []);

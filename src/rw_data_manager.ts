@@ -50,6 +50,33 @@ class Validate<T>{
 		return this;
 	}
 	//
+	public validateRef(): Validate<J> {
+		const primaryKey = (this.dataFile.__data_config__[this.prop])?.primaryKey;
+		const entity_ref = (this.dataFile.__data_config__[this.prop])?.entity_ref;
+
+		if (entity_ref?.length > 0) {
+
+			entity_ref.forEach((ref) => {
+				const refPk = (this.dataFile.__data_config__[ref.entity])?.primaryKey;
+
+				if (refPk !== ref.primaryKey) {
+					const error = new Error('discrepancias en la referecia entre foreignKey y primaryKey.');
+					throw error;
+				}
+
+				const isEqual = (this.dataFile.props[ref.entity]).some((prop) =>
+					prop[refPk] === this.newPropObject[ref.foreignKey]);
+
+				if (!isEqual) {
+					const error = new Error(`No existe un valor para la referencia en '${ref.entity}'.`);
+					throw error;
+				}
+			})
+		}
+
+		return this;
+	}
+	//
 	public removeEntityConfig(): Validate<j> {
 		delete this.newPropObject.entity_config;
 		return this;
@@ -154,6 +181,7 @@ export default class DbManager<T> {
 		Validate_
 			.validatePrimaryKey()
 			.validateUnique()
+			.validateRef()
 			.removeEntityConfig();
 
 		return {
