@@ -1,28 +1,16 @@
 'use strict'
-import { EntityConfig } from "./entity_config.ts";
+import { EntityConfg } from "./entity_config.js";
 
 type uid = `${string}-${string}-${string}-${string}-${string}`;
 export type Id = string | number | symbol | uid;
 
 export class alpha {
 	id: Id;
-	entity_config?: EntityConfig | null;
+	config?: EntityConfg | null;
 
-	constructor(id_entity_config?: Id | EntityConfig, entity_config?: EntityConfig) {
-		if (id_entity_config) {
-
-			if (typeof id_entity_config === 'object') {
-				this.entity_config = id_entity_config;
-			} else {
-				this.id = id_entity_config;
-
-				if (entity_config)
-					this.entity_config = entity_config;
-			}
-		}
-		else {
-			this.id = crypto.randomUUID();
-		}
+	constructor(idOrConfig?: Id | EntityConfg, config?: EntityConfg) {
+		this.config = (idOrConfig && typeof idOrConfig === 'object') ? idOrConfig : config;
+		this.id = (idOrConfig && typeof idOrConfig !== 'object') ? idOrConfig : crypto.randomUUID();
 	}
 
 	public json() {

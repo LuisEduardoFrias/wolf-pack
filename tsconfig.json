@@ -47,7 +47,8 @@
 		/* Especificar nombres de paquetes de tipos que se incluirán sin ser referenciados en un archivo fuente. */
 		// "allowUmdGlobalAccess": true,                     /* Permitir el acceso a los globales UMD desde los módulos. */
 		// "moduleSuffixes": [],                             /* Lista de sufijos de nombres de archivo a buscar al resolver un módulo. */
-		// "allowImportingTsExtensions": true /* Permitir que las importaciones incluyan extensiones de archivo TypeScript. Requiere '--moduleResolution bundler' y ya sea '--noEmit' o '--emitDeclarationOnly' para estar configurado. */,
+		//"allowImportingTsExtensions": true /* Permitir que las importaciones incluyan extensiones de archivo TypeScript. Requiere '--moduleResolution bundler' y ya sea '--noEmit' o '--emitDeclarationOnly' para estar configurado. */,
+	
 		// "resolvePackageJsonExports": true,                /* Usar el campo 'exports' del package.json al resolver las importaciones de paquetes. */
 		// "resolvePackageJsonImports": true,                /* Usar el campo 'imports' del package.json al resolver las importaciones. */
 		// "customConditions": [],                           /* Condiciones para establecer además de los valores predeterminados específicos del resolutor al resolver importaciones. */

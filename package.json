@@ -5,7 +5,11 @@
 	"main": "./dist/index.js",
 	"type": "module",
 	"scripts": {
-		"dev": "tsx test.ts"
+		"dev": "tsx test.ts",
+		"build": "rm -rf ./dist && tsc",
+		"lint": "eslint .",
+		"test": "vitest",
+		"coverage": "vitest run --coverage"
 	},
 	"keywords": [
 		"db",

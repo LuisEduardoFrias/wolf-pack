@@ -1,14 +1,16 @@
-import { entity_config } from './entity_config.ts'
+import { EntityConfg } from './entity_config.js'
+
+export type TypeProps = {
+	[key: string | number | symbol]: {
+		[key: string | number | symbol]: any
+	}[]
+}
 
 export type TypeFileStructure = {
 	__data_config__: {
-		[key: string | number | symbol]: EntityConf
+		[key: string | number | symbol]: EntityConfg
 	}[],
-	props: {
-		[key: string | number | symbol]: {
-			[key: string | number | symbol]: any
-		}[]
-	}[]
+	props: TypeProps[]
 }
 /*
 {

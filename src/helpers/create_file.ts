@@ -1,8 +1,8 @@
 import { writeFile, existsSync, mkdirSync } from 'fs';
 import { join, dirname } from 'path';
-import { encript } from './crypto.ts';
-import { Config } from '../models/config.ts';
-import { TypeFileStructure } from '../models/type_file_structure.ts';
+import { encript } from './crypto.js';
+import { Config } from '../models/config.js';
+import { TypeFileStructure } from '../models/type_file_structure.js';
 
 export default function CreateFile(fileName: string, structureDataFiles: TypeFileStructure, update: boolean): void {
 	const filePath = join(Config.DATA_PATH, `${fileName}${Config.FILE_EXTENSION}`);
@@ -19,7 +19,7 @@ export default function CreateFile(fileName: string, structureDataFiles: TypeFil
 	}
 
 	if (existsSync(filePath) && !update) {
-		//console.log(`El archivo ${fileName}.tson ya existe en: ${filePath}`);
+		//console.log(`El archivo ${fileName}.json ya existe en: ${filePath}`);
 	} else {
 		const data = Config.ENCRYPT ? encript(JSON.stringify(structureDataFiles)) : JSON.stringify(structureDataFiles);
 

@@ -1,8 +1,8 @@
 import fs from 'fs/promises';
-import {encript} from './crypto.ts';
+import {encript} from './crypto.js';
 import { join } from 'path';
-import { Config } from '../models/config.ts'
-import { TypeFileStructure } from '../models/type_file_structure.ts'
+import { Config } from '../models/config.js'
+import { TypeFileStructure } from '../models/type_file_structure.js'
 
 export default async function RewriteFile(fileName: string, fileObject: TypeFileStructure) {
 	try {

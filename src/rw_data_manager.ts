@@ -1,9 +1,9 @@
-import RewriteFile from './helpers/rewrite_file.ts';
-import ReadFile from './helpers/read_file.ts';
-import { getValueOperator } from './helpers/get_value_operator.ts';
-import { getProp, setProp } from './helpers/getset.ts';
-import { Where } from './helpers/where.ts';
-import { TypeFileStructure } from './models/type_file_structure.ts'
+import RewriteFile from './helpers/rewrite_file.js';
+import ReadFile from './helpers/read_file.js';
+import { getValueOperator } from './helpers/get_value_operator.js';
+import { getProp, setProp } from './helpers/getset.js';
+import { Where } from './helpers/where.js';
+import { TypeFileStructure } from './models/type_file_structure.js'
 
 class Validate<T>{
 	dataFile: TypeFileStructure;

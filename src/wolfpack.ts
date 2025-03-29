@@ -1,8 +1,9 @@
 'use strict'
-import CreateFile from './helpers/create_file.ts'
-import { TypeFileStructure } from './models/type_file_structure.ts'
-import SubwriteFile from './helpers/rewrite_file.ts'
-import DbManager from './rw_data_manager.ts'
+import CreateFile from './helpers/create_file.js'
+import { TypeFileStructure } from './models/type_file_structure.js'
+import SubwriteFile from './helpers/rewrite_file.js'
+import DbManager from './rw_data_manager.js'
+import {Entity_ref} from './models/entity_config.js'
 //
 export type TypeWolfpack = {
 	member: any[],
@@ -38,7 +39,7 @@ export default class WolfPack {
 		wolfpacks.forEach((wolfpack_: TypeWolfpack) => {
 
 			let newWolfpack = {};
-			let relationBetween = [];
+			let relationBetween: { prop: string, refsProp: string[] }[] = [];
 
 			wolfpack_.member.forEach((classType: any) => {
 				const instance = new classType(...[]);
@@ -50,9 +51,9 @@ export default class WolfPack {
 				);
 
 				if (instance?.entity_config?.entity_ref) {
-					const refs = [];
+					const refs: string[] = [];
 					instance?.entity_config
-						?.entity_ref?.forEach((ref) => {
+						?.entity_ref?.forEach((ref: Entity_ref) => {
 							refs.push(ref.entity)
 						})
 
@@ -75,13 +76,13 @@ export default class WolfPack {
 			Reflect.set(WolfPack.instance, wolfpack_.wolfpack, newWolfpack);
 
 			relationBetween.forEach((rb) => {
-				rb.refsProp.forEach((rp) => {
+				rb.refsProp.forEach((rp: string) => {
 
-					const data = structureDataFiles.__data_config__[rp];
+					const data = structureDataFiles.__data_config__[rp as keyof { [key: string]: any }];
 
 					Reflect.set(structureDataFiles.__data_config__, rp, {
 						...data,
-						relationship: [...(data?.relationship ?? []), rb.prop],
+						relationship: [...data?.relationship, rb.prop],
 					});
 				})
 			})

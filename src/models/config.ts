@@ -1,4 +1,4 @@
-import { environment } from './environment.ts'
+import { environment } from './environment.js'
 import { fileURLToPath } from 'url'
 import { dirname, join } from 'path'
 
@@ -6,7 +6,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
 //
-const ENVIRONMENT = environment.DEVELOPMENT;
+const ENVIRONMENT: environment = environment.DEVELOPMENT;
 //const ENVIRONMENT = environment.PRODUCTION;
 
 const InternalConfig = {

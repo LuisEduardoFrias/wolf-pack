@@ -1,5 +1,5 @@
 import crypto from 'crypto';
-import { Config } from '../models/config.ts';
+import { Config } from '../models/config.js';
 import { Buffer } from 'buffer';
 
 const KEY = Buffer.from(Config.ENCRYPTION_KEY, 'utf-8').subarray(0, 32);
