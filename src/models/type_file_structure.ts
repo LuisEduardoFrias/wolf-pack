@@ -1,38 +1,66 @@
-import { EntityConfg } from './entity_config.js'
 
-export type TypeProps = {
-	[key: string | number | symbol]: {
-		[key: string | number | symbol]: any
-	}[]
+export type TypePropName = string | symbol;
+
+
+export type TypeExternalObject = {
+	[key: TypePropName]: any,
+	entityConfig: TypeConfigProps
+}
+
+export type TypeObject = {
+	[key: TypePropName]: any
+}
+
+export type TypeDataObject = {
+	[key: TypePropName]: TypeObject[]
+}
+
+export type TypeEntityRef = {
+	primaryKey: string,
+	foreignKey: string,
+	entity: string
+};
+
+export type TypeConfigProps = {
+	primaryKey: string,
+	unique: string[],
+	entityRef: TypeEntityRef[]
+	relationship: string[]
+}
+
+export type TypeDataConfig = {
+	[key: TypePropName]: TypeConfigProps,
 }
 
 export type TypeFileStructure = {
-	__data_config__: {
-		[key: string | number | symbol]: EntityConfg
-	}[],
-	props: TypeProps[]
+	__data_config__: TypeDataConfig,
+	data: TypeDataObject
 }
+
 /*
 {
-	"__data_config__": [
+	"__data_config__": {
 		"UserModel": {
-			"primaryKey"?: string;
-			"unique"?: string[];
-			entity_ref?: [
+			"primaryKey" ?: string;
+			"unique" ?: string[];
+			"entity_ref" ?: [
 				{
 					primaryKey: string,
 					foreignKey: string
 					entity: string
 				}
-			]
+			];
+			"relationship": string[]
 		}
-	]
-	"props": [
+	}
+	"props": {
+		"UserModel": [
 		{
-			"UserModel": [],
-			"PhoneModel": [],
-			"CapacityModel": []
+			"name":string
 		}
-	]
+		];
+		"PhoneModel": [];
+		"CapacityModel": [];
+	}
 }
 */

@@ -1,9 +1,7 @@
 'use strict'
+import { TypeFileStructure, TypeEntityRef } from './models/type_file_structure.js'
 import CreateFile from './helpers/create_file.js'
-import { TypeFileStructure } from './models/type_file_structure.js'
-import SubwriteFile from './helpers/rewrite_file.js'
 import DbManager from './rw_data_manager.js'
-import {Entity_ref} from './models/entity_config.js'
 //
 export type TypeWolfpack = {
 	member: any[],
@@ -13,14 +11,14 @@ export type TypeWolfpack = {
 
 const structureDataFiles: TypeFileStructure = {
 	__data_config__: {},
-	props: {}
+	data: {}
 }
 
 export default class WolfPack {
 	private static instance: WolfPack;
 	private constructor() { }
 
-	public static getInstance(wolfpacks: TypeWolfpack[], update: boolean): WolfPack {
+	public static getInstance(wolfpacks: TypeWolfpack[], update: boolean = false): WolfPack {
 
 		if (!WolfPack.instance) {
 			this.initialice(wolfpacks);
@@ -33,7 +31,7 @@ export default class WolfPack {
 		return WolfPack.instance;
 	}
 
-	private static initialice(wolfpacks: TypeWolfpack[], update: boolean) {
+	private static initialice(wolfpacks: TypeWolfpack[], update: boolean = false) {
 		WolfPack.instance = new WolfPack();
 
 		wolfpacks.forEach((wolfpack_: TypeWolfpack) => {
@@ -50,10 +48,11 @@ export default class WolfPack {
 					new DbManager<typeof instance>(wolfpack_.wolfpack, classType.name)
 				);
 
-				if (instance?.entity_config?.entity_ref) {
+				if (instance?.entity_config?.entityRef) {
 					const refs: string[] = [];
+
 					instance?.entity_config
-						?.entity_ref?.forEach((ref: Entity_ref) => {
+						?.entity_ref?.forEach((ref: TypeEntityRef) => {
 							refs.push(ref.entity)
 						})
 
@@ -65,12 +64,12 @@ export default class WolfPack {
 
 				Reflect.set(structureDataFiles.__data_config__, classType.name, instance.entity_config ?? {
 					primaryKey: 'id',
-					entity_ref: [],
+					entityRef: [],
 					relationship: [],
 					unique: null,
 				});
 
-				Reflect.set(structureDataFiles.props, classType.name, []);
+				Reflect.set(structureDataFiles.data, classType.name, []);
 			})
 
 			Reflect.set(WolfPack.instance, wolfpack_.wolfpack, newWolfpack);
@@ -78,7 +77,7 @@ export default class WolfPack {
 			relationBetween.forEach((rb) => {
 				rb.refsProp.forEach((rp: string) => {
 
-					const data = structureDataFiles.__data_config__[rp as keyof { [key: string]: any }];
+					const data = structureDataFiles.__data_config__[rp as keyof { [key: string | symbol]: string | string[] | TypeEntityRef }];
 
 					Reflect.set(structureDataFiles.__data_config__, rp, {
 						...data,

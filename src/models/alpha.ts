@@ -1,15 +1,15 @@
 'use strict'
-import { EntityConfg } from "./entity_config.js";
+import { TypeConfigProps } from './type_file_structure.js'
 
 type uid = `${string}-${string}-${string}-${string}-${string}`;
 export type Id = string | number | symbol | uid;
 
 export class alpha {
 	id: Id;
-	config?: EntityConfg | null;
+	 entityConfig?: TypeConfigProps | null;
 
-	constructor(idOrConfig?: Id | EntityConfg, config?: EntityConfg) {
-		this.config = (idOrConfig && typeof idOrConfig === 'object') ? idOrConfig : config;
+	constructor(idOrConfig?: Id | TypeConfigProps, entityConfig?: TypeConfigProps) {
+		this.entityConfig = (idOrConfig && typeof idOrConfig === 'object') ? idOrConfig : entityConfig;
 		this.id = (idOrConfig && typeof idOrConfig !== 'object') ? idOrConfig : crypto.randomUUID();
 	}
 

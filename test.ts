@@ -14,16 +14,16 @@ class CapacityModel extends alpha {
 		processorSpeed: string,
 		phone: Id) {
 
-		super();
-		this.entity_config = {
-			entity_ref: [
+		super({
+			entityRef: [
 				{
 					primaryKey: 'imei',
 					foreignKey: 'phone',
 					entity: 'PhoneModel'
 				}
-			],
-		}
+			]
+		})
+
 		this.rom = rom;
 		this.ramMemory = ramMemory;
 		this.processor = processor;
@@ -50,10 +50,10 @@ class PhoneModel extends alpha {
 		capacity: string,
 		releaseDate: string) {
 
-		super();
-		this.entity_config = {
+		super({
 			primaryKey: "imei",
-		}
+		})
+
 		this.imei = imei;
 		this.imgUrl = imgUrl;
 		this.brand = brand;
@@ -79,18 +79,18 @@ class UserModel extends alpha {
 		password: string,
 		phone: Id
 	) {
-		super();
-		this.entity_config = {
+		super({
 			primaryKey: "user",
 			unique: ["email", "password"],
-			entity_ref: [
+			entityRef: [
 				{
 					primaryKey: 'imei',
 					foreignKey: 'phone',
 					entity: 'PhoneModel'
 				}
 			],
-		}
+		})
+
 		this.name = name;
 		this.lastName = lastName;
 		this.email = email;
@@ -128,7 +128,7 @@ const newUser = new UserModel(
 //console.log("post phone: ", await wolfpack.phones.PhoneModel.post(newPhone))
 //console.log("post user: ", await wolfpack.phones.UserModel.post(newUser))
 
-console.log("delete phone: ", await wolfpack.phones.PhoneModel.delete({imei: "hs6jwjwi8skskls9kw"}))
+console.log("delete phone: ", await wolfpack.phones.PhoneModel.delete({ imei: "hs6jwjwi8skskls9kw" }))
 
 console.log('get phone: ', await wolfpack.phones.UserModel.get());
 console.log('get user: ', await wolfpack.phones.PhoneModel.get());
