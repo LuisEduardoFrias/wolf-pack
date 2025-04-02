@@ -125,10 +125,6 @@ const newUser = new UserModel(
 )
 
 
-//console.log("post phone: ", await wolfpack.phones.PhoneModel.post(newPhone))
-//console.log("post user: ", await wolfpack.phones.UserModel.post(newUser))
+console.log("post phone: ", await wolfpack.phones.PhoneModel.post(newPhone))
 
-console.log("delete phone: ", await wolfpack.phones.PhoneModel.delete({ imei: "hs6jwjwi8skskls9kw" }))
-
-console.log('get phone: ', await wolfpack.phones.UserModel.get());
 console.log('get user: ', await wolfpack.phones.PhoneModel.get());

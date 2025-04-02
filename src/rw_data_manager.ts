@@ -33,14 +33,14 @@ class Validate<T extends TypeExternalObject>{
 	}
 	//
 	public validateUnique(): Validate<T> {
-		const uniques = (this.dataFile.__data_config__[this.prop])?.unique;
+		const uniques = (this.dataFile.__data_config__[this.prop])?.uniques;
 		const props: TypeObject[] = this.dataFile.data[this.prop];
 
 		if (props && uniques) {
-			uniques.forEach((unique: string) => {
+			uniques.forEach((uniques: string) => {
 				props.forEach((prop: TypeObject) => {
-					if (prop[unique] === this.newPropObject[unique as keyof T]) {
-						const error = new Error(`La propiedad '${unique}' con el valor '${prop[unique]}', esta configurada como 'unique' no pueden existir dublicados.`)
+					if (prop[uniques] === this.newPropObject[uniques as keyof T]) {
+						const error = new Error(`La propiedad '${uniques}' con el valor '${prop[uniques]}', esta configurada como 'uniques' no pueden existir dublicados.`)
 						throw error;
 					}
 				})
@@ -51,11 +51,11 @@ class Validate<T extends TypeExternalObject>{
 	}
 	//
 	public validateRef(): Validate<T> {
-		const entityRef = (this.dataFile.__data_config__[this.prop])?.entityRef;
+		const entityRefs = (this.dataFile.__data_config__[this.prop])?.entityRefs;
 
-		if (entityRef?.length > 0) {
+		if (entityRefs?.length > 0) {
 
-			entityRef.forEach((ref: TypeEntityRef) => {
+			entityRefs.forEach((ref: TypeEntityRef) => {
 				const refPk: string = (this.dataFile.__data_config__[ref.entity])?.primaryKey;
 
 				if (refPk !== ref.primaryKey) {
@@ -77,7 +77,9 @@ class Validate<T extends TypeExternalObject>{
 	}
 	//
 	public removeEntityConfig(): Validate<T> {
-		if (this.newPropObject?.entityConfig) {
+
+
+		if (this.newPropObject.entityConfig) {
 			delete this.newPropObject.entityConfig;
 		}
 
@@ -122,13 +124,13 @@ export default class DbManager<T> {
 
 		if (!propObjects) return null;
 
-		propObjects.push(dataObjects);
+		propObjects.push(dataObjects as T);
 
 		const _fileObject = setProp<T>(this.prop, propObjects, fileObject);
 
 		RewriteFile(this.fileName, _fileObject);
 
-		return dataObjects;
+		return dataObjects as T;
 	}
 	//
 	public async put(obj: T, where: object): Promise<T | null> {
@@ -141,46 +143,51 @@ export default class DbManager<T> {
 		const props = Reflect.ownKeys(where as object);
 
 		const index: number = propObjects.findIndex((dto: T) => {
-			return props.every((prop: string) => { return dto[prop as keyof T] === where[prop]; })
+			return props.every((prop) => dto[prop as keyof T] === where[prop as keyof object])
 		});
 
 		if (index === -1) return null;
 
-		propObjects[index] = dataObjects;
+		propObjects[index] = dataObjects as T;
 
 		const _fileObject = setProp<T>(this.prop, propObjects, fileObject);
 
 		RewriteFile(this.fileName, _fileObject);
 
-		return dataObjects;
+		return dataObjects as T;
 	}
 	//
-	public async delete(where: object): Promise<T> {
+	public async delete(where: object): Promise<T | null> {
 		const dataFile = await ReadFile(this.fileName);
 
 		if (!dataFile) return null;
 
-		const propObject = (dataFile.__data_config__[this.prop]);
-		const relationship = propObject?.relationship;
-		const primaryKey = propObject?.primaryKey;
-		const props: T[] = dataFile.data[this.prop];
+		const propConfig = (dataFile.__data_config__[this.prop]);
+		const relationships = propConfig?.relationships;
+		const primaryKey = propConfig?.primaryKey;
+		const props: T[] = dataFile.data[this.prop] as T[];
 
 		const values = Reflect.ownKeys(where as object);
 
-		const index: number = props.findIndex((dto: T) => {
-			return values.every((value: string) => { return dto[value as keyof T] === where[value]; })
-		});
+		const index: number = props.findIndex((dto: T) =>
+			values.every((value) =>
+				dto[value as keyof T] === where[value as keyof object])
+		);
 
 		if (index === -1) return null;
 
-		if (relationship) {
-			const valuePrimaryKey = props[index][primaryKey];
+		if (relationships) {
+			const valuePrimaryKey = props[index][primaryKey as keyof T];
 
-			relationship.forEach((rs) => {
-				const foreignKey = (dataFile.__data_config__[rs])?.entityRef?.foreignKey;
+			relationships.forEach((rs: string) => {
+				const entityRefs = (dataFile.__data_config__[rs])?.entityRefs;
 				const _props = dataFile.data[rs];
 
-				if (_props.some((so) => so[foreignKey] === valuePrimaryKey)) {
+				if (_props.some((prop) =>
+					entityRefs.some((entityRef) =>
+						prop[entityRef.foreignKey as keyof TypeObject] === valuePrimaryKey
+					)
+				)) {
 					return null;
 				}
 			})
@@ -191,10 +198,12 @@ export default class DbManager<T> {
 		const fileObject = setProp<T>(this.prop, props, dataFile);
 
 		RewriteFile(this.fileName, fileObject);
+
+		return props[index];
 	}
 	//
-	private async validated(obj: T): Promise<{ fileObject: TypeDataConfig, dataObjects: TypeDataObject }> {
-		const Validate_ = new Validate(await ReadFile(this.fileName), obj, this.prop);
+	private async validated(obj: T): Promise<{ fileObject: TypeFileStructure, dataObjects: TypeObject }> {
+		const Validate_ = new Validate(await ReadFile(this.fileName), obj as TypeExternalObject, this.prop);
 
 		Validate_
 			.validatePrimaryKey()
@@ -204,7 +213,7 @@ export default class DbManager<T> {
 
 		return {
 			fileObject: Validate_.dataFile,
-			dataObjects: Validate_.newPropObject as TypeDataObject
+			dataObjects: Validate_.newPropObject as TypeObject
 		};
 	}
 }

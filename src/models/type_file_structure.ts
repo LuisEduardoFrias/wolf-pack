@@ -4,7 +4,7 @@ export type TypePropName = string | symbol;
 
 export type TypeExternalObject = {
 	[key: TypePropName]: any,
-	entityConfig: TypeConfigProps
+	entityConfig?: TypeConfigProps
 }
 
 export type TypeObject = {
@@ -23,9 +23,9 @@ export type TypeEntityRef = {
 
 export type TypeConfigProps = {
 	primaryKey: string,
-	unique: string[],
-	entityRef: TypeEntityRef[]
-	relationship: string[]
+	uniques: string[],
+	entityRefs: TypeEntityRef[]
+	relationships: string[]
 }
 
 export type TypeDataConfig = {

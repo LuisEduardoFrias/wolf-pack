@@ -65,7 +65,7 @@ export default class WolfPack {
 				Reflect.set(structureDataFiles.__data_config__, classType.name, instance.entity_config ?? {
 					primaryKey: 'id',
 					entityRef: [],
-					relationship: [],
+					relationships: [],
 					unique: null,
 				});
 
@@ -81,7 +81,7 @@ export default class WolfPack {
 
 					Reflect.set(structureDataFiles.__data_config__, rp, {
 						...data,
-						relationship: [...data?.relationship, rb.prop],
+						relationships: [...data?.relationships, rb.prop],
 					});
 				})
 			})
