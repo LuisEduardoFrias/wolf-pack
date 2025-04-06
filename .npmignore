@@ -1,0 +1,9 @@
+node_modules
+src/
+test/
+.env
+test.ts
+.gitignore
+coverage
+tsconfig.json
+package-lock.json

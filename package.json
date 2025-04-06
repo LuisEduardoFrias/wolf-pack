@@ -1,29 +1,30 @@
 {
-	"name": "wolf",
-	"version": "1.0.0",
-	"description": "Wolf-pack is a package that makes it easy for you to save data locally in encrypted Json format, it uses the http nomenclature for ease allowing you to store data in relational and non-relational ways.",
-	"main": "./dist/index.js",
-	"type": "module",
-	"scripts": {
-		"dev": "tsx test.ts",
-		"build": "rm -rf ./dist && tsc",
-		"lint": "eslint .",
-		"test": "vitest",
-		"coverage": "vitest run --coverage"
-	},
-	"keywords": [
-		"db",
-		"json",
-		"local"
-	],
-	"author": "luis eduardo frias",
-	"dependencies": {
-		"guid-typescript": "^1.0.9"
-	},
-	"devDependencies": {
-		"@types/node": "^20.17.28",
-		"tslib": "^2.8.1",
-		"tsx": "^4.19.3",
-		"typescript": "^5.2.2"
-	}
+  "name": "wolf-db",
+  "version": "1.0.1",
+  "description": "Wolf-pack is a package that makes it easy for you to save data locally in encrypted Json format, it uses the http nomenclature for ease allowing you to store data in relational and non-relational ways.",
+  "main": "./dist/index.js",
+  "type": "module",
+  "scripts": {
+    "dev": "tsx test.ts",
+    "build": "rm -rf ./dist && tsc",
+    "lint": "eslint .",
+    "test": "vitest",
+    "coverage": "vitest run --coverage"
+  },
+  "keywords": [
+    "db",
+    "json",
+    "local"
+  ],
+  "author": "luis eduardo frias",
+  "dependencies": {
+    "guid-typescript": "^1.0.9",
+    "user": "^0.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.17.28",
+    "tslib": "^2.8.1",
+    "tsx": "^4.19.3",
+    "typescript": "^5.2.2"
+  }
 }

@@ -1,4 +1,4 @@
-import fs from 'fs/promises';
+import { writeFile } from 'fs/promises';
 import {encript} from './crypto.js';
 import { join } from 'path';
 import { Config } from '../models/config.js'
@@ -10,7 +10,7 @@ export default async function RewriteFile(fileName: string, fileObject: TypeFile
 
 		const data = Config.ENCRYPT ? encript(JSON.stringify(fileObject)) : JSON.stringify(fileObject);
 
-		await fs.writeFile(filePath, data);
+		await writeFile(filePath, data);
 	} catch (err: any) {
 		const error = new Error(err);
 		throw error;
