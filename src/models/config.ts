@@ -1,15 +1,8 @@
-//import { environment } from './environment.js'
-//import { fileURLToPath } from 'url'
-//import { dirname,join } from 'path'
-
-//const __filename = fileURLToPath(import.meta.url);
-//const __dirname = dirname(__filename);
-
-//const ENVIRONMENT: environment = environment.DEVELOPMENT;
-//const ENVIRONMENT = environment.PRODUCTION;
 import { getOrCreateSecretKey } from '../helpers/create_key.js'
 
 const ENVIRONMENT_PRODUCTION = true;
+
+const basePath = './.data';
 
 const InternalConfig = {
   ENCRYPT: ENVIRONMENT_PRODUCTION,
@@ -22,8 +15,8 @@ const {
 } = process.env;
 
 const DefaultConfig = {
-  ENCRYPTION_KEY: ENCRYPTION_KEY ?? getOrCreateSecretKey(),
-  DATA_PATH: DATA_PATH ?? './DATA'
+  ENCRYPTION_KEY: ENCRYPTION_KEY ?? getOrCreateSecretKey(DATA_PATH ?? basePath),
+  DATA_PATH: DATA_PATH ?? basePath
 }
 
 export const Config = {

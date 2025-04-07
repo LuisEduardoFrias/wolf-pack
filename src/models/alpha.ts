@@ -1,10 +1,16 @@
 'use strict'
 import { TypeConfigProps } from './type_file_structure.js'
-import {TypeId} from './type_id.js'
+import { TypeId } from './type_id.js'
 
 export class alpha {
   id: TypeId;
   entityConfig?: TypeConfigProps | null;
+  /*
+  sometime
+  startDate:string;
+  updateData:string;
+  user:string;
+  */
 
   constructor(idOrConfig?: TypeId | TypeConfigProps, entityConfig?: TypeConfigProps) {
     this.entityConfig = (idOrConfig && typeof idOrConfig === 'object') ? idOrConfig : entityConfig;

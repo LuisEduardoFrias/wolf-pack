@@ -2,8 +2,8 @@ import crypto from 'crypto';
 import { join, dirname } from 'path';
 import { writeFileSync, readFileSync, mkdirSync } from 'fs';
 
-export function getOrCreateSecretKey(): string {
-  const keyFilePath = join('./DATA', '.secure_credentials');
+export function getOrCreateSecretKey(basePath:string): string {
+  const keyFilePath = join(basePath, '.secure_credentials');
 
   try {
     return (readFileSync(keyFilePath)).toString('utf-8');
