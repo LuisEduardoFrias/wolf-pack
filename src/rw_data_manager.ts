@@ -133,7 +133,7 @@ export default class DbManager<T> {
 
     RewriteFile(this.fileName, _fileObject);
 
-    EventHandler.emit(`${this.fileName}:post`, propObjects)
+    EventHandler.emit(`${this.emit}:post`, propObjects)
 
     return dataObjects as T;
   }
@@ -159,7 +159,7 @@ export default class DbManager<T> {
 
     RewriteFile(this.fileName, _fileObject);
 
-    EventHandler.emit(`${this.fileName}:put`, propObjects)
+    EventHandler.emit(`${this.emit}:put`, propObjects)
 
     return dataObjects as T;
   }
@@ -206,7 +206,7 @@ export default class DbManager<T> {
 
     RewriteFile(this.fileName, fileObject);
 
-    EventHandler.emit(`${this.fileName}:delete`, propObjects)
+    EventHandler.emit(`${this.emit}:delete`, propObjects)
 
     return propObjects[index];
   }

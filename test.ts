@@ -1,5 +1,5 @@
-import { wolfPackCreate } from "./src/index.js";
-import { alpha, Id } from "./src/models/alpha.js";
+import { wolfPackCreate, EventHandler, alpha } from "./src/index.js";
+import { TypeTypeId } from './src/models/type_id.js'
 
 class CapacityModel extends alpha {
   rom: string;
@@ -12,7 +12,7 @@ class CapacityModel extends alpha {
     ramMemory: string,
     processor: string,
     processorSpeed: string,
-    phone: Id) {
+    phone: TypeId) {
 
     super({
       entityRef: [
@@ -77,7 +77,7 @@ class UserModel extends alpha {
     email: string,
     user: string,
     password: string,
-    phone: Id
+    phone: TypeId
   ) {
     super({
       primaryKey: "user",
@@ -124,7 +124,10 @@ const newUser = new UserModel(
   'hs6jwjwi8skskls9kw',
 )
 
+EventHandler.on('phones:PhoneModel:post', (data) => {
+  console.log('data: ', data)
+});
 
 console.log("post phone: ", await wolfpack.phones.PhoneModel.post(newPhone))
 
-console.log('get user: ', await wolfpack.phones.PhoneModel.get());
+console.log('get phone: ', await wolfpack.phones.PhoneModel.get());
