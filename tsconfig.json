@@ -3,9 +3,9 @@
   "display": "Node 22",
   "_version": "22.0.0",
   "compilerOptions": {
-    "target": "es2016",
+    "target": "es2022",
     "lib": [
-      "es2016"
+      "es2022"
     ],
     "module": "node16",
     "rootDir": "./src", // Cambia esto
@@ -22,7 +22,7 @@
     "types": [
       "node"
     ],
-    "resolveJsonModule": true,
+    "resolveJsonModule": false,
     "outDir": "./dist",
     "forceConsistentCasingInFileNames": true,
     "strict": true,

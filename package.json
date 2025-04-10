@@ -1,12 +1,13 @@
 {
   "name": "wolf-db",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "Wolf-pack is a package that makes it easy for you to save data locally in encrypted Json format, it uses the http nomenclature for ease allowing you to store data in relational and non-relational ways.",
   "main": "./dist/index.js",
   "type": "module",
   "scripts": {
     "dev": "tsx test.ts",
     "build": "rm -rf ./dist && tsc",
+    "start": "node ./dist/test.js",
     "lint": "eslint .",
     "test": "vitest",
     "coverage": "vitest run --coverage"

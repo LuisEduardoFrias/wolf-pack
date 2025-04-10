@@ -2,6 +2,7 @@ node_modules
 src/
 test/
 .env
+.data
 test.ts
 .gitignore
 coverage

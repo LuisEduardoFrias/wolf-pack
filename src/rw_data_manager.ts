@@ -92,11 +92,13 @@ export default class DbManager<T> {
   fileName: string;
   prop: string;
   emit: string;
+  eventHandler: EventHandler;
 
   constructor(fileName: string, prop: string) {
     this.fileName = fileName;
     this.prop = prop;
     this.emit = `${fileName}:${prop}`
+    this.eventHandler = EventHandler.instance;
   }
 
   public async get(whereOperation?: string | object, where?: object): Promise<T[] | null> {
@@ -133,7 +135,7 @@ export default class DbManager<T> {
 
     RewriteFile(this.fileName, _fileObject);
 
-    EventHandler.emit(`${this.emit}:post`, propObjects)
+    this.eventHandler.emit(`${this.emit}:post`, propObjects)
 
     return dataObjects as T;
   }
@@ -159,7 +161,7 @@ export default class DbManager<T> {
 
     RewriteFile(this.fileName, _fileObject);
 
-    EventHandler.emit(`${this.emit}:put`, propObjects)
+    this.eventHandler.emit(`${this.emit}:put`, propObjects)
 
     return dataObjects as T;
   }
@@ -206,7 +208,7 @@ export default class DbManager<T> {
 
     RewriteFile(this.fileName, fileObject);
 
-    EventHandler.emit(`${this.emit}:delete`, propObjects)
+    this.eventHandler.emit(`${this.emit}:delete`, propObjects)
 
     return propObjects[index];
   }

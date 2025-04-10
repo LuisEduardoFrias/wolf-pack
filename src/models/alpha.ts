@@ -4,7 +4,7 @@ import { TypeId } from './type_id.js'
 
 export class alpha {
   id: TypeId;
-  entityConfig?: TypeConfigProps | null;
+  entityConfig?: Partial<TypeConfigProps> | null;
   /*
   sometime
   startDate:string;
@@ -12,7 +12,7 @@ export class alpha {
   user:string;
   */
 
-  constructor(idOrConfig?: TypeId | TypeConfigProps, entityConfig?: TypeConfigProps) {
+  constructor(idOrConfig?: TypeId | Partial<TypeConfigProps>, entityConfig?: Partial<TypeConfigProps>) {
     this.entityConfig = (idOrConfig && typeof idOrConfig === 'object') ? idOrConfig : entityConfig;
     this.id = (idOrConfig && typeof idOrConfig !== 'object') ? idOrConfig : crypto.randomUUID();
   }

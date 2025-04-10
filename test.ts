@@ -104,7 +104,7 @@ const wolfpack = wolfPackCreate(
   {
     member: [UserModel, CapacityModel, PhoneModel],
     wolfpack: "phones"
-  });
+  }, true);
 
 const newPhone = new PhoneModel(
   'hs6jwjwi8skskls9kw',
@@ -124,7 +124,9 @@ const newUser = new UserModel(
   'hs6jwjwi8skskls9kw',
 )
 
-EventHandler.on('phones:PhoneModel:post', (data) => {
+const eventHandler = EventHandler.instance;
+
+eventHandler.on('phones:PhoneModel:post', (data) => {
   console.log('data: ', data)
 });
 

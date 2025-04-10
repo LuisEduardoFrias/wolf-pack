@@ -1,34 +1,36 @@
-type TypeEvent = (data: any) => void;
 
-class EventHandler {
-
-  events: { [key: string]: TypeEvent[] };
-  static instance: EventHandler | null = null;
-
-  public static getInstace() {
-    if (!this.instance) {
-      this.instance = new EventHandler();
-    }
-
-    return this.instance;
-  }
+export default class EventHandler {
+  static #instance: EventHandler;
+  events: { [key: string]: Function[] };
+  rando: number;
 
   private constructor() {
     this.events = {};
+    this.rando = Math.random();
   }
 
-  on(eventName: string, handler: TypeEvent) {
+  public static get instance(): EventHandler {
+    if (!EventHandler.#instance) {
+      EventHandler.#instance = new EventHandler();
+    }
+
+    return EventHandler.#instance;
+  }
+
+  public on(eventName: string, handler: Function) {
+    console.log('on (Paquete): ', eventName, this.rando, this.events);
+
     if (!this.events[eventName]) {
       this.events[eventName] = [];
     }
     this.events[eventName].push(handler);
   }
 
-  emit(eventName: string, data: any) {
+  public emit(eventName: string, data: any) {
+    console.log('emit (Paquete): ', eventName, this.rando, this.events);
+
     if (this.events[eventName]) {
       this.events[eventName].forEach((handler) => handler(data));
     }
   }
 }
-
-export default EventHandler.getInstace();
