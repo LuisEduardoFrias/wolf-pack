@@ -3,7 +3,7 @@ import ReadFile from './helpers/read_file.js';
 import { getValueOperator } from './helpers/get_value_operator.js';
 import { getProp, setProp } from './helpers/getset.js';
 import { Where } from './helpers/where.js';
-import EventHandler from './helpers/event_handler.js'
+import eventHandler from './helpers/event_handler.js'
 import { TypeFileStructure, TypeObject, TypeExternalObject, TypeEntityRef } from './models/type_file_structure.js'
 
 class Validate<T extends TypeExternalObject>{
@@ -92,13 +92,11 @@ export default class DbManager<T> {
   fileName: string;
   prop: string;
   emit: string;
-  eventHandler: EventHandler;
 
   constructor(fileName: string, prop: string) {
     this.fileName = fileName;
     this.prop = prop;
     this.emit = `${fileName}:${prop}`
-    this.eventHandler = EventHandler.instance;
   }
 
   public async get(whereOperation?: string | object, where?: object): Promise<T[] | null> {
@@ -135,7 +133,7 @@ export default class DbManager<T> {
 
     RewriteFile(this.fileName, _fileObject);
 
-    this.eventHandler.emit(`${this.emit}:post`, propObjects)
+    eventHandler.emit(`${this.emit}:post`, propObjects)
 
     return dataObjects as T;
   }
@@ -161,7 +159,7 @@ export default class DbManager<T> {
 
     RewriteFile(this.fileName, _fileObject);
 
-    this.eventHandler.emit(`${this.emit}:put`, propObjects)
+    eventHandler.emit(`${this.emit}:put`, propObjects)
 
     return dataObjects as T;
   }
@@ -208,7 +206,7 @@ export default class DbManager<T> {
 
     RewriteFile(this.fileName, fileObject);
 
-    this.eventHandler.emit(`${this.emit}:delete`, propObjects)
+    eventHandler.emit(`${this.emit}:delete`, propObjects)
 
     return propObjects[index];
   }

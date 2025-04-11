@@ -1,25 +1,20 @@
 
-export default class EventHandler {
-  static #instance: EventHandler;
+class EventHandler {
   events: { [key: string]: Function[] };
-  rando: number;
 
   private constructor() {
     this.events = {};
-    this.rando = Math.random();
   }
 
   public static get instance(): EventHandler {
-    if (!EventHandler.#instance) {
-      EventHandler.#instance = new EventHandler();
+    if (!global.instance) {
+      global.instance = new EventHandler();
     }
 
-    return EventHandler.#instance;
+    return global.instance;
   }
 
   public on(eventName: string, handler: Function) {
-    console.log('on (Paquete): ', eventName, this.rando, this.events);
-
     if (!this.events[eventName]) {
       this.events[eventName] = [];
     }
@@ -27,10 +22,12 @@ export default class EventHandler {
   }
 
   public emit(eventName: string, data: any) {
-    console.log('emit (Paquete): ', eventName, this.rando, this.events);
-
     if (this.events[eventName]) {
       this.events[eventName].forEach((handler) => handler(data));
     }
   }
 }
+
+const eventHandler = EventHandler.instance;
+
+export default eventHandler;
