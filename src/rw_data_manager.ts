@@ -88,7 +88,14 @@ class Validate<T extends TypeExternalObject>{
   }
 }
 
-export default class DbManager<T> {
+export interface IDbManager {
+  get(whereOperation?: string | object, where?: object): Promise<T[] | null>
+  post(obj: T): Promise<T | null>
+  put(obj: T, where: object): Promise<T | null>
+  delete(where: object): Promise<T | null>
+}
+
+export default class DbManager<T> implements IDbManager {
   fileName: string;
   prop: string;
   emit: string;
